@@ -1,0 +1,29 @@
+version: "3.7"
+
+services:
+  ecomm-sql:
+    container_name: ecomm-sql
+    image: postgres:latest
+    ports:
+      - 5432:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: postgres
+  ecommerce:
+    container_name: ecommerce
+    image: node:14
+    command: sh -c "yarn install && yarn start:dev"
+    env_file:
+      - .env
+    volumes:
+      - .:/usr/src/app
+    working_dir: /usr/src/app
+    ports:
+      - 3000:3000
+    depends_on:
+      - ecomm-sql
+
+networks:
+  default:
+    name: net
